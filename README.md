@@ -1,2 +1,2 @@
-# stm32f407_dds_dac
-DDS generator using internal DAC
+# stm32f407_midi_usb
+Simple USB midi sender/receiver
