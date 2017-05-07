@@ -1,3 +1,7 @@
+# This will sort the Eclipse indexer issue with mixed C/C++ source code projects
+# by Wolfgang Schmieder
+# (https://www.eclipse.org/forums/index.php/t/1066506/?)
+
 # Create language specific (C/C++) compiler built in macros and include paths
 message("${MESSAGE_TABS}language_provider.cmake ...")
 SET(MESSAGE_TABS "${MESSAGE_TABS}\t")
