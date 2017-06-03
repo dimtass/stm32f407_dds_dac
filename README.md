@@ -5,7 +5,7 @@ DDS generator using the STM32f4xxx DAC
 
 This project is a 2-channel sine signal generator using an STM32F407VET6 board. Both DAC1 and DAC2 are running in DMA mode with double buffering and FIFO enabled. The sample rate is 384KHz and for the sine generation the phase accumulator method is used. You can control the sine frequency using the stm's UART1 port. The board I've used is the following one and you can find on e-bay for about $15.
 
-<img src="http://www.stupid-projects.com/wp-content/uploads/2017/05/stm32f407vet6_.jpg" alt="Drawing" style="width: 150px;"/>
+<img src="http://www.stupid-projects.com/wp-content/uploads/2017/05/stm32f407vet6_.jpg" width="200"/>
 
 FYI, there are two quite similar dev boards for stm32f407. The first one is the STM32F407ZET6 board and the other one is STM32F407VET6 board. Their difference is that the ZET6 micro-processor is an LQFP144 package and has 114 gpios and the VET6 is LQFP100 package with 82 GPIOs. Both have 512KB flash and 192KB ram and have exactly the same peripherals on exactly the same ports and pins; therefore the code should be compatible for both boards.
 
