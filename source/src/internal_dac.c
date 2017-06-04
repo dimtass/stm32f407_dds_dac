@@ -34,7 +34,7 @@ void DAC_init(void)
 {
 	DAC_GPIO_Init();
 	DAC_set_defaults(DAC_CHANNEL_1);
-//	DAC_set_defaults(DAC_CHANNEL_2);
+	DAC_set_defaults(DAC_CHANNEL_2);
 	TIM6_Init();
 }
 
@@ -74,6 +74,7 @@ void DAC_set_defaults(uint8_t channel)
 		dma_stream = DMA1_Stream5;
 		DMA_PeripheralBaseAddr = (uint32_t)DAC_DHR12R1_ADDR;
 		NVIC_IRQChannel = DMA1_Stream5_IRQn;
+		glb.dac1_phase_accumulator = 0;
 	}
 	else if (channel == DAC_CHANNEL_2) {
 		DAC_InitStructure = &DAC2_InitStructure;
@@ -82,6 +83,7 @@ void DAC_set_defaults(uint8_t channel)
 		dma_stream = DMA1_Stream6;
 		DMA_PeripheralBaseAddr = (uint32_t)DAC_DHR12R2_ADDR;
 		NVIC_IRQChannel = DMA1_Stream6_IRQn;
+		glb.dac2_phase_accumulator = 0;
 	}
 	else {
 		return;
@@ -146,14 +148,14 @@ void DMA1_Stream5_IRQHandler(void)
 		DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5);
 		if ((DMA1_Stream5->CR & DMA_SxCR_CT) == 0)//get number of current buffer
 		{
-			PIN_DEBUG_PORT->ODR |= PIN_DEBUG1;
+//			PIN_DEBUG_PORT->ODR |= PIN_DEBUG1;
 			/* calculate new buffer 0, while buffer 1 is transmitting */
-			DDS_calculate(glb.dds_buff_1[DAC_CHANNEL_1], DDS_BUFF_SIZE, glb.ch1_freq);
+			DDS_calculate(glb.dds_buff_1[DAC_CHANNEL_1], DDS_BUFF_SIZE, glb.ch1_freq, &glb.dac1_phase_accumulator);
 		}
 		else {
-			PIN_DEBUG_PORT->ODR &= ~PIN_DEBUG1;
+//			PIN_DEBUG_PORT->ODR &= ~PIN_DEBUG1;
 			/* calculate new buffer 0, while buffer 0 is transmitting */
-			DDS_calculate(glb.dds_buff_0[DAC_CHANNEL_1], DDS_BUFF_SIZE, glb.ch1_freq);
+			DDS_calculate(glb.dds_buff_0[DAC_CHANNEL_1], DDS_BUFF_SIZE, glb.ch1_freq, &glb.dac1_phase_accumulator);
 		}
 	}
 }
@@ -165,13 +167,13 @@ void DMA1_Stream6_IRQHandler(void)
 		DMA_ClearFlag(DMA1_Stream6, DMA_FLAG_TCIF6);
 		if ((DMA1_Stream6->CR & DMA_SxCR_CT) == 0)//get number of current buffer
 		{
-			PIN_DEBUG_PORT->ODR |= PIN_DEBUG2;
-			DDS_calculate(glb.dds_buff_1[DAC_CHANNEL_2], DDS_BUFF_SIZE, glb.ch2_freq);
+//			PIN_DEBUG_PORT->ODR |= PIN_DEBUG2;
+			DDS_calculate(glb.dds_buff_1[DAC_CHANNEL_2], DDS_BUFF_SIZE, glb.ch2_freq, &glb.dac2_phase_accumulator);
 		}
 		else {
-			PIN_DEBUG_PORT->ODR &= ~PIN_DEBUG2;
+//			PIN_DEBUG_PORT->ODR &= ~PIN_DEBUG2;
 			/* calculate new buffer 0, while buffer 0 is transmitting */
-			DDS_calculate(glb.dds_buff_0[DAC_CHANNEL_2], DDS_BUFF_SIZE, glb.ch2_freq);
+			DDS_calculate(glb.dds_buff_0[DAC_CHANNEL_2], DDS_BUFF_SIZE, glb.ch2_freq, &glb.dac2_phase_accumulator);
 		}
 	}
 }

@@ -11,6 +11,6 @@
 #include "dds_defs.h"
 
 void DDS_Init(void);
-void DDS_calculate(uint16_t * buffer, uint16_t buffer_size, float frequency);
+void DDS_calculate(uint16_t * buffer, uint16_t buffer_size, float frequency, uint32_t * phase_accumulator);
 
 #endif /* SYNTH_SYNTH_H_ */

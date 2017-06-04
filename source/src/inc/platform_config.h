@@ -85,7 +85,10 @@ typedef struct {
 	uint32_t trace_level;
 	/* dds buffers */
 	uint16_t dds_buff_0[2][DDS_BUFF_SIZE];	// [0][]: DAC1, [1][]: DAC2
-	uint16_t dds_buff_1[2][DDS_BUFF_SIZE];	// [0][]: DAC1, [1][]: DAC2
+	uint16_t dds_buff_1[2][DDS_BUFF_SIZE]; // [0][]: DAC1, [1][]: DAC2
+
+	uint32_t dac1_phase_accumulator;
+	uint32_t dac2_phase_accumulator;
 
 	float		ch1_freq;
 	float		ch2_freq;

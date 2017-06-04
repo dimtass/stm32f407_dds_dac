@@ -55,7 +55,7 @@ int main(void)
 	debug_uart_set_trace_level(TRACE_LEVEL_DEFAULT, 1);
 
 	glb.ch1_freq = 1000;
-	glb.ch2_freq = 100;
+	glb.ch2_freq = 1000;
 
 	/* Configure DACs */
 	DDS_Init();

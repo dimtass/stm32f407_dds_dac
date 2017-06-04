@@ -23,8 +23,6 @@
 #define QFLOAT(X)	(X / (float)(1<<FRAC))
 #define Q16_TO_UINT(X)	((uint32_t)X / (1<<FRAC))
 
-
-static uint32_t _phase_accumulator = 0; // fixed-point (16.16) phase accumulator
 static float _sine[TABLE_SIZE+1];	// +1 for interpolation
 
 void sine_init(void)
@@ -37,7 +35,6 @@ void sine_init(void)
 	}
 	/* set the last byte equal to first for interpolation */
 	_sine[TABLE_SIZE] = _sine[0];
-	_phase_accumulator = 0;
 }
 
 void DDS_Init(void)
@@ -45,7 +42,7 @@ void DDS_Init(void)
 	sine_init();
 }
 
-void DDS_calculate(uint16_t * buffer, uint16_t buffer_size, float frequency)
+void DDS_calculate(uint16_t * buffer, uint16_t buffer_size, float frequency, uint32_t * phase_accumulator)
 {
 	uint32_t phaseIncrement = Q16((float)frequency*TABLE_SIZE / SAMPLE_RATE);
 	uint32_t index = 0;
@@ -54,18 +51,18 @@ void DDS_calculate(uint16_t * buffer, uint16_t buffer_size, float frequency)
 	for(i=0; i<buffer_size; i++)
     {
 		/* Increment the phase accumulator */
-		_phase_accumulator += phaseIncrement;
+		*phase_accumulator += phaseIncrement;
 
-		_phase_accumulator &= TABLE_SIZE*(1<<16) - 1;
+		*phase_accumulator &= TABLE_SIZE*(1<<16) - 1;
 
-		index = _phase_accumulator >> 16;
+		index = *phase_accumulator >> 16;
 
 		/* interpolation */
 		float v1 = _sine[index];
 		float v2 = _sine[index+1];
-		float fmul = (_phase_accumulator & 65535)/65536.0f;
+		float fmul = (*phase_accumulator & 65535)/65536.0f;
 		float out = v1 + (v2-v1)*fmul;
 
-		buffer[i] = (uint16_t)(2048 * out + 2047) ;
+		buffer[i] = (uint16_t)(2048 * out + 2047);
     }
 }
