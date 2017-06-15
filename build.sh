@@ -53,7 +53,7 @@ echo "cmake flags       : ${CMAKE_FLAGS}"
 echo "cmake scripts     : ${SCRIPTS_CMAKE}"
 echo "IDE generator     : ${IDE_GENERATOR}"
 
-#cd src
+cd source
 
 # setup cmake
 cmake -G"${IDE_GENERATOR}" -H. -B${BUILD_ARCH_DIR} ${CMAKE_FLAGS}
